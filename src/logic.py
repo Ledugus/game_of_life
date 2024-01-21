@@ -1,9 +1,17 @@
-class Grid:
-    def __init__(self, size, init_state=[]) -> None:
-        self.size = size
-        self.grid = self.create_grid(size, init_state)
+from utils import rand_state
 
-    def create_grid(self, size, init_state):
+
+class Grid:
+    def __init__(self, size, init_state=[], density=0.5) -> None:
+        self.size = size
+        if init_state == []:
+            self.grid = self.create_random_grid(density)
+        else:
+            self.grid = self.create_grid_from_state(size, init_state)
+
+    def create_grid_from_state(
+        self, size: int, init_state: list[tuple]
+    ) -> list[list[int]]:
         grid = []
         for _ in range(size):
             ligne = []
@@ -14,11 +22,20 @@ class Grid:
             grid[x][y] = 1
         return grid
 
+    def create_random_grid(self, density: float):
+        grid = []
+        for _ in range(self.size):
+            ligne = []
+            for _ in range(self.size):
+                ligne.append(rand_state(density))
+            grid.append(ligne)
+        return grid
+
     def get_square_value(self, x, y):
         return self.grid[x][y]
 
     def step(self):
-        new_grid = self.grid[:]
+        new_grid = [line[:] for line in self.grid]
         for x in range(self.size):
             for y in range(self.size):
                 new_grid[x][y] = self.get_new_state(x, y)

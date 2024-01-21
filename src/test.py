@@ -1,4 +1,4 @@
-from src.logic import Grid
+from logic import Grid
 
 
 def test_neighbours():
@@ -23,9 +23,16 @@ def test_get_new_state():
     print(grid)
 
 
+def test_create_grid():
+    grid = Grid(4)
+    grid = Grid.create_grid_from_state(grid, 4, [(0, 1), (1, 1), (2, 1)])
+    print(grid)
+
+
 def run_tests():
     test_neighbours()
     test_step()
+    test_create_grid()
 
 
 if __name__ == "__main__":

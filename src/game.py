@@ -3,9 +3,10 @@ import pygame as p
 from logic import Grid
 
 WIN_SIZE = 600
-SIZE = 10
+SIZE = 60
 SQUARE_SIZE = WIN_SIZE / SIZE
 INIT_STATE = [(1, 1), (2, 1), (0, 1)]
+DENSITY = 0.5
 
 
 class Game:
@@ -14,7 +15,7 @@ class Game:
         self.screen = p.display.set_mode((WIN_SIZE, WIN_SIZE))
         p.display.set_caption("Game of Life")
         self.running = True
-        self.grid = Grid(SIZE, INIT_STATE)
+        self.grid = Grid(SIZE, density=DENSITY)
         self.colors = [p.Color("white"), p.Color("black")]
 
     def game_loop(self):
