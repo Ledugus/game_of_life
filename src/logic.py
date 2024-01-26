@@ -65,5 +65,8 @@ class Grid:
             liste.append(self.grid[(x + rel_x) % self.size][(y + rel_y) % self.size])
         return liste
 
+    def toggle_state_cell(self, x: int, y: int):
+        self.grid[x][y] = 1 - self.grid[x][y]
+
     def __str__(self) -> str:
         return "\n".join([str(self.grid[i]) for i in range(self.size)])
