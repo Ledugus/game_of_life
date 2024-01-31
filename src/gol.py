@@ -1,4 +1,5 @@
 from utils import rand_state
+import pygame as p
 
 
 class Grid:
@@ -8,6 +9,7 @@ class Grid:
             self.grid = self.create_random_grid(density)
         else:
             self.grid = self.create_grid_from_state(size, init_state)
+        self.colors = [p.Color("white"), p.Color("black")]
 
     def create_grid_from_state(
         self, size: int, init_state: list[tuple]
@@ -67,6 +69,21 @@ class Grid:
 
     def toggle_state_cell(self, x: int, y: int):
         self.grid[x][y] = 1 - self.grid[x][y]
+
+    def render(self, screen, pos: tuple[int, int], win_size: int):
+        square_size = win_size // self.size
+        for x in range(self.size):
+            for y in range(self.size):
+                p.draw.rect(
+                    screen,
+                    self.colors[self.get_square_value(x, y)],
+                    p.Rect(
+                        pos[0] + x * square_size,
+                        pos[1] + y * square_size,
+                        square_size,
+                        square_size,
+                    ),
+                )
 
     def __str__(self) -> str:
         return "\n".join([str(self.grid[i]) for i in range(self.size)])

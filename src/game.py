@@ -1,36 +1,22 @@
 from math import floor
 from time import perf_counter
 import pygame as p
-from logic import Grid
+from gol import Grid
 from window import Window
 
-INIT_STATE = [(1, 1), (2, 1), (0, 1)]
 FPS = 10
 
 
 class Game(Window):
-    def __init__(self, app, grid_size, density) -> None:
+    def __init__(self, app, grid: Grid) -> None:
         super().__init__(app)
-        self.grid = Grid(grid_size, density=density)
-        self.colors = [p.Color("white"), p.Color("black")]
+        self.grid = grid
         self.auto_play = False
         self.last_step_time = perf_counter()
-        self.square_size = self.width / grid_size
+        self.square_size = self.width / grid.size
 
     def render(self):
-        self.screen.fill(self.colors[0])
-        for x in range(self.grid.size):
-            for y in range(self.grid.size):
-                p.draw.rect(
-                    self.screen,
-                    self.colors[self.grid.get_square_value(x, y)],
-                    p.Rect(
-                        x * self.square_size,
-                        y * self.square_size,
-                        self.square_size,
-                        self.square_size,
-                    ),
-                )
+        self.grid.render(self.screen, (0, 0), self.width)
 
     def update(self, events):
         if self.auto_play and (perf_counter() - self.last_step_time) > (1 / FPS):

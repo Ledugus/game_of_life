@@ -1,11 +1,10 @@
 import pygame as p
 import pygame_widgets
-from pygame_widgets.slider import Slider
-from pygame_widgets.textbox import TextBox
 from pygame_widgets.button import Button
 from slider_combo import SliderCombo
 from window import Window
 from game import Game
+from gol import Grid
 
 
 class Menu(Window):
@@ -33,16 +32,20 @@ class Menu(Window):
         self.size_text = self.app.font.render("Taille de la grille", True, (0, 0, 0))
 
         self.size_slider_combo = SliderCombo(
-            self.screen, self.width / 2 - 100, 300, 0, 100
+            self.screen, self.width / 2 - 100, 300, 10, 100, self.reload_preview
         )
         self.density_text = self.app.font.render(
             "Densité de la grille (%)", True, (0, 0, 0)
         )
         self.density_slider_combo = SliderCombo(
-            self.screen, self.width / 2 - 100, 400, 0, 100
+            self.screen, self.width / 2 - 100, 400, 0, 100, self.reload_preview
         )
+        self.reload_preview()
 
     def render(self):
+        self.game_grid.render(
+            self.screen, (self.width // 2 - 150, self.height - 400), 300
+        )
         self.screen.blit(self.size_text, (self.width / 2 - 300, 300))
         self.screen.blit(self.density_text, (self.width / 2 - 300, 400))
         self.screen.blit(self.title, (self.width // 2, 30))
@@ -53,10 +56,12 @@ class Menu(Window):
         self.size_slider_combo.update()
         self.density_slider_combo.update()
 
-    def launch_game(self):
-        game = Game(
-            self.app,
+    def reload_preview(self):
+        self.game_grid = Grid(
             self.size_slider_combo.get_value(),
-            self.density_slider_combo.get_value() / 100,
+            density=self.density_slider_combo.get_value() / 100,
         )
+
+    def launch_game(self):
+        game = Game(self.app, self.game_grid)
         self.enter_state(game)
